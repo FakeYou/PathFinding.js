@@ -10,6 +10,10 @@ function pathTest(opt) {
         finder = opt.finder,
         optimal = opt.optimal;
 
+    /*if(name == 'JumpPoint') {
+        return;
+    }*/
+
     describe(name, function() {
         var startX, startY, endX, endY, grid, expectedLength,
             width, height, matrix, path, i, scen;
@@ -18,7 +22,7 @@ function pathTest(opt) {
             var testId = 0;
 
             return function(startX, startY, endX, endY, grid, expectedLength) {
-                it('should solve maze '+ ++testId, function() {
+                it('should solve maze '+ ++testId +' with '+ grid.constructor.name, function() {
                     path = finder.findPath(startX, startY, endX, endY, grid);
                     if (optimal) {
                         path.length.should.equal(expectedLength);
@@ -38,12 +42,17 @@ function pathTest(opt) {
             height = matrix.length;
             width = matrix[0].length;
 
-            grid = new PF.Grid(width, height, matrix);
+            if(scen.type == "graph"){
+                grid = new PF.Graph(matrix);
+            }
+            else if(scen.type == "grid"){
+                grid = new PF.Grid(width, height, matrix);
+            }
 
             test(
-                scen.startX, scen.startY, 
-                scen.endX, scen.endY, 
-                grid, 
+                scen.startX, scen.startY,
+                scen.endX, scen.endY,
+                grid,
                 scen.expectedLength
             );
         }
